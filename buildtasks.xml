@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ant-droid.buildtasks" 
+        basedir="." >
+
+    <buildnumber file="build.number"/>
+    <dirname property="ant-droid.dir" file="${ant.file.ant-droid.buildtasks}"/>
+    <property name="ant-droid.properties" value="ant-droid.properties" />
+
+    <target name="ant-droid.init">
+        <antcall target="version.init"/>
+        <loadproperties srcFile="${ant-droid.properties}"/>
+    </target>
+
+    <target name="config.init" depends="ant-droid.init" >
+        <!-- Copy the configuration file, replacing tokens in the file. -->
+        <property name="config.template" value="${ant-droid.dir}/config/AppConfig.java" />
+        <property name="config.target-path" value="${source.dir}/com/ant-droid/config" />
+        <copy file="${config.template}" todir="${config.target-path}" overwrite="true" encoding="utf-8">
+            <filterset>
+                <filtersfile file="${ant-droid.properties}"/>
+            </filterset>
+        </copy>
+    </target>
+
+
+    <target name="config.manifest" depends="ant-droid.init" >
+        <!-- Copy the AndroidManifest.xml file with filtering. -->
+        <property name="config.manifest.template" value="${basedir}/AndroidManifest.xml" />
+        <copy todir="${basedir}" file="${config.manifest.template}">
+            <filterset>
+                <filtersfile file="${ant-droid.properties}"/>
+            </filterset>
+        </copy>
+    </target>
+
+
+    <target name="version.init">
+        <propertyfile file="${ant-droid.properties}"
+            comment="Default properties created by ant-droid">
+            <entry key="ant-droid.app.package" default="${ant.project.name}"/>
+            <entry key="ant-droid.app.name" default="${ant.project.name}"/>
+            <entry key="ant-droid.app.ver.major" type="int" default="1"/>
+            <entry key="ant-droid.app.ver.minor" type="int" default="0"/>
+            <entry key="ant-droid.app.ver.inline" type="int" default="0"/>
+            <entry key="ant-droid.app.ver.build" default="${build.number}" />
+            <entry key="ant-droid.app.ver" type="int" default="1.0" />
+            <entry key="ant-droid.app.config.debug" default="true" />
+            <entry key="ant-droid.app.config.logging" default="true" />
+        </propertyfile>
+
+        <loadproperties srcFile="${ant-droid.properties}"/>
+        <echo message="Version info taken from ${ant-droid.properties}"/>
+
+        <property name="ant-droid.app.ver" value="${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}.${ant-droid.app.ver.inline}" />
+        <property name="ant-droid.app.ver.full" value="${ant-droid.app.name}-${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}.${ant-droid.app.ver.inline}.${ant-droid.app.ver.build}" />
+
+        <property name="ant-droid.version.name.full" value="${ant-droid.app.name}-${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}.${ant-droid.app.ver.inline}.${build.number}" />
+        <property name="ant-droid.version.name.short" value="${ant-droid.app.name}-${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}" />
+    </target>
+
+    <target name="version.debug" depends="version.init">
+        <echoproperties/>
+        <copy file="bin/${ant.project.name}-debug.apk" tofile="bin/${ant-droid.version.name.full}_d.apk" overwrite="true" encoding="utf-8" />
+    </target>
+
+    <target name="version.release" depends="version.init,release">
+        <copy file="bin/${ant.project.name}-release-unsigned.apk" tofile="bin/${ant-droid.version.name.full}-unsigned.apk" overwrite="true" encoding="utf-8" />
+    </target>
+
+    <target name="rev.init" depends="version.init" >
+    </target>
+
+    <target name="rev.major" depends="rev.init" >
+        <propertyfile file="${ant-droid.properties}">
+            <entry key="ant-droid.app.ver.major" type="int" operation="+" value="1"/>
+            <entry key="ant-droid.app.ver.minor" type="int" value="0"/>
+            <entry key="ant-droid.app.ver.inline" type="int" value="0"/>
+            <entry key="ant-droid.app.ver.build" default="1" operation="+" type="int"  value="1"/>
+            <entry key="ant-droid.app.ver" value="${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}"/>
+        </propertyfile>
+    </target>
+
+    <target name="rev.minor" depends="rev.init">
+        <propertyfile file="${ant-droid.properties}">
+            <entry key="ant-droid.app.ver.minor" type="int" operation="+" value="1" />
+            <entry key="ant-droid.app.ver.inline" type="int" value="0"/>
+        </propertyfile>
+    </target>
+
+    <target name="rev.inline" depends="rev.init">
+        <propertyfile file="${ant-droid.properties}">
+            <entry key="ant-droid.app.ver.inline" type="int" operation="+" value="1" />
+        </propertyfile>
+    </target>
+
+    <target name="rev.build" depends="rev.init">
+        <propertyfile file="${ant-droid.properties}">
+            <entry key="ant-droid.app.ver.build" type="int" operation="+" value="1" />
+        </propertyfile>
+    </target>
+
+    <target name="rev.versioncode" depends="rev.init">
+        <propertyfile file="${ant-droid.properties}">
+            <entry key="ant-droid.app.ver.code" type="int" operation="+" value="1" />
+        </propertyfile>
+    </target>
+
+    <target name="package.artifacts" depends="version.init">
+        <mkdir dir="dist"/>
+        <zip destfile="dist/${ant-droid.app.ver.full}.zip"
+           basedir="bin"
+           includes="${ant-droid.app.ver.full}*.apk,proguard/mapping.txt"
+        />
+    </target>
+
+    <target name="rev.git.reset" depends="version.init" >
+        <exec executable="git">
+            <arg value="reset"/>
+            <arg value="HEAD"/>
+            <arg value="${ant-droid.properties}"/>
+        </exec>
+        <exec executable="git">
+            <arg value="checkout"/>
+            <arg value="--"/>
+            <arg value="${ant-droid.properties}"/>
+        </exec>
+    </target>
+
+    <target name="rev.git.commit" depends="version.init" >
+        <!-- Incr the version code on each commit -->
+        <antcall target="rev.versioncode"/>
+        <exec executable="git">
+            <arg value="tag"/>
+            <arg value="-f"/>
+            <arg value="${ant-droid.app.ver.full}"/>
+        </exec>
+        <exec executable="git">
+            <arg value="add"/>
+            <arg value="${ant-droid.properties}"/>
+        </exec>
+        <exec executable="git">
+            <arg value="commit"/>
+            <arg value="-m"/>
+            <arg value="${ant-droid.app.ver.full}"/>
+            <arg value="--dry-run"/>
+        </exec>
+        <exec executable="git">
+            <arg value="push"/>
+            <arg value="origin"/>
+            <arg value="--dry-run"/>
+          </exec>
+    </target>
+
+</project>
