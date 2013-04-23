@@ -15,6 +15,7 @@
         <!-- Copy the configuration file, replacing tokens in the file. -->
         <property name="config.template" value="${ant-droid.dir}/config/AppConfig.java" />
         <property name="config.target-path" value="${source.dir}/com/ant-droid/config" />
+                <filter token="ant-droid.app.ver.build" value="${ant-droid.app.ver.build}"/>
         <copy file="${config.template}" todir="${config.target-path}" overwrite="true" encoding="utf-8">
             <filterset>
                 <filtersfile file="${ant-droid.properties}"/>
@@ -26,7 +27,7 @@
     <target name="config.manifest" depends="ant-droid.init" >
         <!-- Copy the AndroidManifest.xml file with filtering. -->
         <property name="config.manifest.template" value="${basedir}/AndroidManifest.xml" />
-        <copy todir="${basedir}" file="${config.manifest.template}">
+        <copy file="${config.manifest.template}" todir="${basedir}" overwrite="true" encoding="utf-8">
             <filterset>
                 <filtersfile file="${ant-droid.properties}"/>
             </filterset>
@@ -42,25 +43,24 @@
             <entry key="ant-droid.app.ver.major" type="int" default="1"/>
             <entry key="ant-droid.app.ver.minor" type="int" default="0"/>
             <entry key="ant-droid.app.ver.inline" type="int" default="0"/>
-            <entry key="ant-droid.app.ver.build" default="${build.number}" />
-            <entry key="ant-droid.app.ver" type="int" default="1.0" />
+            <entry key="ant-droid.app.ver" default="1.0" />
             <entry key="ant-droid.app.config.debug" default="true" />
             <entry key="ant-droid.app.config.logging" default="true" />
         </propertyfile>
 
+        <!-- Take app build number from build.number -->
+        <property name="ant-droid.app.ver.build" value="${build.number}" />
+
         <loadproperties srcFile="${ant-droid.properties}"/>
         <echo message="Version info taken from ${ant-droid.properties}"/>
 
-        <property name="ant-droid.app.ver" value="${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}.${ant-droid.app.ver.inline}" />
-        <property name="ant-droid.app.ver.full" value="${ant-droid.app.name}-${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}.${ant-droid.app.ver.inline}.${ant-droid.app.ver.build}" />
-
-        <property name="ant-droid.version.name.full" value="${ant-droid.app.name}-${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}.${ant-droid.app.ver.inline}.${build.number}" />
-        <property name="ant-droid.version.name.short" value="${ant-droid.app.name}-${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}" />
+        <property name="ant-droid.app.ver" value="${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}" />
+        <property name="ant-droid.app.ver.full" value="${ant-droid.app.name}-${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}.${ant-droid.app.ver.inline}.${build.number}" />
     </target>
 
-    <target name="version.debug" depends="version.init">
+    <target name="version.debug" depends="version.init, debug">
         <echoproperties/>
-        <copy file="bin/${ant.project.name}-debug.apk" tofile="bin/${ant-droid.version.name.full}_d.apk" overwrite="true" encoding="utf-8" />
+        <copy file="bin/${ant.project.name}-debug.apk" tofile="bin/${ant-droid.app.ver.full}_d.apk" overwrite="true" encoding="utf-8" />
     </target>
 
     <target name="version.release" depends="version.init,release">
