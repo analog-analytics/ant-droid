@@ -57,9 +57,9 @@
 
     <target name="ant-droid.version.debug" depends="version.init,debug">
         <copy file="bin/${ant.project.name}-debug.apk" 
-			tofile="bin/${ant-droid.app.ver.full}_d.apk"
+			tofile="bin/${ant-droid.app.ver.full}-debug.apk"
 			overwrite="true" encoding="utf-8" />
-        <echo message="Created bin/${ant-droid.app.ver.full})-debug.apk"/>
+        <echo message="Created bin/${ant-droid.app.ver.full}-debug.apk"/>
     </target>
 
     <target name="ant-droid.version.release" depends="version.init,release">
