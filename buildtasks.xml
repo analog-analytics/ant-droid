@@ -35,14 +35,12 @@
     </target>
 
     <target name="version.init">
-        <propertyfile file="${ant-droid.properties}"
-            comment="Default properties created by ant-droid">
+        <propertyfile file="${ant-droid.properties}" >
             <entry key="ant-droid.app.package" default="${ant-droid.app.package}" />
             <entry key="ant-droid.app.name" default="${ant.project.name}"/>
             <entry key="ant-droid.app.ver.major" type="int" default="1"/>
             <entry key="ant-droid.app.ver.minor" type="int" default="0"/>
             <entry key="ant-droid.app.ver.inline" type="int" default="0"/>
-            <entry key="ant-droid.app.ver" default="1.0" />
             <entry key="ant-droid.app.config.debug" default="true" />
             <entry key="ant-droid.app.config.logging" default="true" />
         </propertyfile>
