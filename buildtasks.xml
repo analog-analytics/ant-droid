@@ -28,6 +28,11 @@
         <!-- Copy the AndroidManifest.xml file with filtering. -->
         <property name="config.manifest.template" value="${basedir}/AndroidManifest.xml" />
         <copy file="${config.manifest.template}" todir="${basedir}" overwrite="true" encoding="utf-8">
+			<!-- Define explit properties to override the filtersfile -->
+            <filterset>
+                <filter token="ant-droid.app.package" value="${ant-droid.app.package}" />
+                <filter token="ant-droid.app.version.build" value="${ant-droid.app.version.build}" />
+            </filterset>
             <filterset>
                 <filtersfile file="${ant-droid.properties}"/>
             </filterset>
