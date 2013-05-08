@@ -13,6 +13,9 @@ ant-droid.config.target-path:
 ant-droid.app.target:
     Default: "dev" 
 
+ant-droid.app.target:
+    Default: "$(basedir)/$(ant-droid.app.target}.properties"
+
 ant-droid.app.ver.full:
     Default: ${ant-droid.app.name}-${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}.\
 		${ant-droid.app.ver.inline}.${ant-droid.app.ver.build}-${ant-droid.app.target}" 
@@ -44,8 +47,8 @@ ant-droid.app.config.logging:
 ant-droid.app.ver.inline:
     type="int" Default="0"
 
-config.template:
+ant-droid.config.template:
     Default: ${ant-droid.dir}/config/AppConfig.java" 
 
-config.manifest.template:
+ant-droid.config.manifest.template:
     Default: ${basedir}/AndroidManifest.xml" 

@@ -15,28 +15,31 @@
 
     <target name="ant-droid.config.init" depends="ant-droid.init" >
         <!-- Copy the configuration file, replacing tokens in the file. -->
-        <property name="config.template" value="${ant-droid.dir}/config/AppConfig.java" />
+        <property name="ant-droid.config.template" value="${ant-droid.dir}/config/AppConfig.java" />
         <property name="ant-droid.config.target-path" value="${source.dir}/com/ant-droid/config" />
-        <copy file="${config.template}" todir="${ant-droid.config.target-path}" overwrite="true" encoding="utf-8">
+        <copy file="${ant-droid.config.template}" todir="${ant-droid.config.target-path}" overwrite="true" encoding="utf-8">
+            <filterset>
+                <filtersfile file="${ant-droid.app.target.properties}" />
+            </filterset>
             <filterset>
                 <filtersfile file="${ant-droid.properties}"/>
             </filterset>
         </copy>
+        <echo message="Copied ${ant-droid.config.template} to ${ant-droid.config.target-path} overwrite=true encoding=utf-8" />
     </target>
 
     <target name="ant-droid.config.manifest" depends="ant-droid.init" >
         <!-- Copy the AndroidManifest.xml file with filtering. -->
-        <property name="config.manifest.template" value="${basedir}/AndroidManifest.xml" />
-        <copy file="${config.manifest.template}" todir="${basedir}" overwrite="true" encoding="utf-8">
-			<!-- Define explit properties to override the filtersfile -->
+        <property name="ant-droid.config.manifest.template" value="${basedir}/AndroidManifest.xml" />
+        <copy file="${ant-droid.config.manifest.template}" todir="${basedir}" overwrite="true" encoding="utf-8">
             <filterset>
-                <filter token="ant-droid.app.package" value="${ant-droid.app.package}" />
-                <filter token="ant-droid.app.version.build" value="${ant-droid.app.version.build}" />
+                <filtersfile file="${ant-droid.app.target.properties}" />
             </filterset>
             <filterset>
                 <filtersfile file="${ant-droid.properties}"/>
             </filterset>
         </copy>
+        <echo message="Copied ${ant-droid.config.manifest.template} to ${basedir} overwrite=true encoding=utf-8" />
     </target>
 
     <target name="version.init">
