@@ -68,11 +68,30 @@
         <echo message="Created bin/${ant-droid.app.ver.full}-debug.apk"/>
     </target>
 
-    <target name="ant-droid.version.release" depends="version.init,release">
-        <copy file="bin/${ant.project.name}-release-unsigned.apk" 
-			tofile="bin/${ant-droid.app.ver.full}-unsigned.apk"
-			overwrite="true" encoding="utf-8" />
-        <echo message="Created bin/${ant-droid.app.ver.full}-unsigned.apk"/>
+	<target name="ant-droid.apk.check-signed" >
+		<condition property="apk-is-signed" >
+			<resourceexists>
+  				<file file="bin/${ant.project.name}-release.apk"/>
+			</resourceexists>
+		</condition>
+	</target>
+
+    <target name="ant-droid.version.release.signed" depends="ant-droid.apk.check-signed" if="${apk-is-signed}">
+       	<echo message="Found a signed APK" />
+		<property name="apk" value="${ant.project.name}-release.apk" />
+        <copy file="bin/${apk}" tofile="bin/${ant-droid.app.ver.full}.apk" overwrite="true" encoding="utf-8" />
+        <echo message="Copied ${apk} to bin/${ant-droid.app.ver.full}.apk"/>
+    </target>
+
+    <target name="ant-droid.version.release.unsigned" depends="ant-droid.apk.check-signed" unless="${apk-is-signed}">
+       	<echo message="Found an unsigned APK" />
+		<property name="apk" value="${ant.project.name}-release-unsigned.apk" />
+        <copy file="bin/${apk}" tofile="bin/${ant-droid.app.ver.full}-unsigned.apk" overwrite="true" encoding="utf-8" />
+        <echo message="Copied ${apk} to bin/${ant-droid.app.ver.full}-unsigned.apk"/>
+    </target>
+
+    <target name="ant-droid.version.release"
+		depends="version.init,release,ant-droid.version.release.signed,ant-droid.version.release.unsigned">
     </target>
 
 
