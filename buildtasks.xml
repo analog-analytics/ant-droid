@@ -32,7 +32,7 @@
         <!-- Copy the AndroidManifest.xml file with filtering. -->
         <property name="ant-droid.config.manifest.template" value="${basedir}/AndroidManifest.xml" />
         <copy file="${ant-droid.config.manifest.template}" todir="${basedir}" overwrite="true" encoding="utf-8">
-            <filterset>
+            <filterset onmissingfiltersfile="ignore">
                 <filtersfile file="${ant-droid.app.target.properties}" />
             </filterset>
             <filterset>
