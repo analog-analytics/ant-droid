@@ -31,6 +31,7 @@
     <target name="ant-droid.config.manifest" depends="ant-droid.init" >
         <!-- Copy the AndroidManifest.xml file with filtering. -->
         <property name="ant-droid.config.manifest.template" value="${basedir}/AndroidManifest.xml" />
+        <property name="ant-droid.app.ver" value="${ant-droid.app.ver.major}.${ant-droid.app.ver.minor}" />
         <copy file="${ant-droid.config.manifest.template}" todir="${basedir}" overwrite="true" encoding="utf-8">
             <filterset>
 				<filter token="ant-droid.app.ver" value="${ant-droid.app.ver}"/>
