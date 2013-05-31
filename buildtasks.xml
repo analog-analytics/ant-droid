@@ -8,7 +8,6 @@
     <property name="ant-droid.app.package" value="com.ant-droid.config" />
 
     <target name="ant-droid.init">
-    	<antcall target="rev.build"/>
         <antcall target="version.init"/>
         <loadproperties srcFile="${ant-droid.properties}"/>
     </target>
