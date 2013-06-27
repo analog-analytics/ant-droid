@@ -18,6 +18,9 @@
         <property name="ant-droid.config.target-path" value="${source.dir}/com/ant-droid/config" />
         <copy file="${ant-droid.config.template}" todir="${ant-droid.config.target-path}" overwrite="true" encoding="utf-8">
             <filterset>
+				<filter token="ant-droid.app.ver.build" value="${ant-droid.app.ver.build}"/>
+            </filterset>
+            <filterset>
                 <filtersfile file="${ant-droid.app.target.properties}" />
             </filterset>
             <filterset>
